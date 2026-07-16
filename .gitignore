@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+.venv/
+node_modules/
+*.egg-info/
+dist/
+build/
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+serviceAccountKey.json
+firebase/serviceAccountKey.json

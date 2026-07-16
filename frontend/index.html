@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinSpark — AI Cybersecurity & Transaction Intelligence Platform</title>
+  <meta name="description" content="FinSpark: AI-driven correlation of cybersecurity telemetry and transactional behaviour for banks. Detects threats, fraud, and quantum-era attacks in real time." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- D3.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- ── Navigation ─────────────────────────────── -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <div class="spark-icon">⚡</div>
+      FinSpark
+    </div>
+
+    <div class="nav-links">
+      <button class="nav-btn active" data-section="overview">Overview</button>
+      <button class="nav-btn" data-section="threats">Threat Feed</button>
+      <button class="nav-btn" data-section="fraud">Fraud Graph</button>
+      <button class="nav-btn" data-section="quantum">Quantum Risk</button>
+      <button class="nav-btn" data-section="xai">Explainability</button>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span id="last-updated" style="font-size:0.72rem;color:var(--text-muted)">Loading...</span>
+      <div class="nav-status">
+        <span class="status-dot"></span>
+        LIVE
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-content">
+
+    <!-- ── Hero Banner ─────────────────────────── -->
+    <div class="hero">
+      <div class="hero-text">
+        <h1>AI-Driven Cyber & Transaction Intelligence</h1>
+        <p>
+          Correlates cybersecurity telemetry with transactional behaviour using Isolation Forest AI +
+          behavioral rule engine. Detects fraud patterns, proactive threats &amp; quantum-era attack indicators in real time.
+        </p>
+      </div>
+      <div class="hero-badges">
+        <span class="badge badge-teal">🤖 Isolation Forest AI</span>
+        <span class="badge badge-blue">🔗 Telemetry Correlation</span>
+        <span class="badge badge-purple">⚛️ Quantum Risk Monitor</span>
+        <span class="badge badge-orange">🕸️ Fraud Graph</span>
+        <span class="badge badge-red">💡 Explainable AI</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SECTION: OVERVIEW
+    ═══════════════════════════════════════════ -->
+    <div id="section-overview" class="page-section">
+
+      <!-- KPI Grid -->
+      <div class="kpi-grid">
+        <div class="kpi-card teal">
+          <div class="kpi-icon">📊</div>
+          <div class="kpi-value" id="kpi-events">—</div>
+          <div class="kpi-label">Events Analyzed</div>
+          <div class="kpi-trend trend-up">↑ Real-time</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-icon">🚨</div>
+          <div class="kpi-value" id="kpi-threats">—</div>
+          <div class="kpi-label">Threats Detected</div>
+          <div class="kpi-trend trend-up">↑ AI-flagged</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-icon">✅</div>
+          <div class="kpi-value" id="kpi-fp">—</div>
+          <div class="kpi-label">False Positive Reduction</div>
+          <div class="kpi-trend trend-down">↓ Industry avg 45%</div>
+        </div>
+        <div class="kpi-card orange">
+          <div class="kpi-icon">⚠️</div>
+          <div class="kpi-value" id="kpi-score">—</div>
+          <div class="kpi-label">Avg Risk Score</div>
+          <div class="kpi-trend">Out of 100</div>
+        </div>
+        <div class="kpi-card purple">
+          <div class="kpi-icon">🎯</div>
+          <div class="kpi-value" id="kpi-accuracy">—</div>
+          <div class="kpi-label">Model Accuracy</div>
+          <div class="kpi-trend trend-down">↓ Validated</div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-icon">⚡</div>
+          <div class="kpi-value" id="kpi-eps">—</div>
+          <div class="kpi-label">Events / Second</div>
+          <div class="kpi-trend">Real-time processing</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="section-grid">
+        <!-- Events Over Time -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon">📈</span> Events &amp; Threats Over Time
+            </div>
+            <button class="btn btn-outline" id="refresh-kpis" onclick="loadDashboardKPIs()">↻ Refresh</button>
+          </div>
+          <div class="card-body">
+            <div class="chart-container" style="height:180px">
+              <canvas id="events-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Risk Distribution -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon">🎯</span> Risk Severity Distribution
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart-container" style="height:180px">
+              <canvas id="risk-dist-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Severity Breakdown + Telemetry Types -->
+      <div class="section-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">🎚️</span> Severity Breakdown</div>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <!-- Critical -->
+              <div>
+                <div class="feature-label" style="margin-bottom:4px;">
+                  <span style="display:flex;align-items:center;gap:6px;">
+                    <span style="width:8px;height:8px;background:#ef4444;border-radius:50%;display:inline-block"></span>
+                    Critical
+                    <span class="bar-count" style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;"></span>
+                  </span>
+                </div>
+                <div class="feature-bar-track"><div id="bar-critical" class="feature-bar-fill risk" style="width:0%"></div></div>
+              </div>
+              <!-- High -->
+              <div>
+                <div class="feature-label" style="margin-bottom:4px;">
+                  <span style="display:flex;align-items:center;gap:6px;">
+                    <span style="width:8px;height:8px;background:#f59e0b;border-radius:50%;display:inline-block"></span>
+                    High
+                    <span class="bar-count" style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;"></span>
+                  </span>
+                </div>
+                <div class="feature-bar-track"><div id="bar-high" class="feature-bar-fill" style="width:0%;background:#f59e0b"></div></div>
+              </div>
+              <!-- Medium -->
+              <div>
+                <div class="feature-label" style="margin-bottom:4px;">
+                  <span style="display:flex;align-items:center;gap:6px;">
+                    <span style="width:8px;height:8px;background:#3b82f6;border-radius:50%;display:inline-block"></span>
+                    Medium
+                    <span class="bar-count" style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;"></span>
+                  </span>
+                </div>
+                <div class="feature-bar-track"><div id="bar-medium" class="feature-bar-fill" style="width:0%;background:#3b82f6"></div></div>
+              </div>
+              <!-- Low -->
+              <div>
+                <div class="feature-label" style="margin-bottom:4px;">
+                  <span style="display:flex;align-items:center;gap:6px;">
+                    <span style="width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block"></span>
+                    Low
+                    <span class="bar-count" style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;"></span>
+                  </span>
+                </div>
+                <div class="feature-bar-track"><div id="bar-low" class="feature-bar-fill" style="width:0%;background:#22c55e"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Telemetry Types -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">📡</span> Telemetry Event Types</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-container" style="height:200px">
+              <canvas id="tele-type-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /section-overview -->
+
+    <!-- ═══════════════════════════════════════════
+         SECTION: THREAT FEED
+    ═══════════════════════════════════════════ -->
+    <div id="section-threats" class="page-section" style="display:none">
+      <div class="section-grid" style="grid-template-columns: 2fr 1fr;">
+
+        <!-- Live Threat Feed -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon">🔴</span>
+              Live AI-Correlated Threat Feed
+              <div class="live-indicator" style="margin-left:8px">
+                <span class="live-dot"></span> LIVE
+              </div>
+            </div>
+            <button class="btn btn-outline" id="refresh-threats">↻ Refresh</button>
+          </div>
+          <div id="threat-feed" class="threat-feed">
+            <div style="text-align:center;padding:2rem;color:var(--text-muted)">
+              <span class="spinner"></span><br/>Loading threats...
+            </div>
+          </div>
+        </div>
+
+        <!-- Attack Timeline -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">⏱️</span> Attack Timeline</div>
+          </div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot" style="background:#ef4444"></div>
+              <div class="timeline-content">
+                <div class="timeline-title">Data Exfiltration Detected</div>
+                <div class="timeline-time">10:42:31 · USR4821 · 84MB out</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot" style="background:#ef4444"></div>
+              <div class="timeline-content">
+                <div class="timeline-title">Correlated Wire Transfer $2.84M</div>
+                <div class="timeline-time">10:42:35 · RU → NG · Cross-border</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot" style="background:#f59e0b"></div>
+              <div class="timeline-content">
+                <div class="timeline-title">Privilege Escalation Alert</div>
+                <div class="timeline-time">10:38:12 · USR7293 · CN origin</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot" style="background:#f59e0b"></div>
+              <div class="timeline-content">
+                <div class="timeline-title">Crypto Purchase $890K flagged</div>
+                <div class="timeline-time">10:38:20 · Immediately post-escalation</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot" style="background:#3b82f6"></div>
+              <div class="timeline-content">
+                <div class="timeline-title">Geo-Velocity Anomaly</div>
+                <div class="timeline-time">10:31:05 · Login IN → Transfer US</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot" style="background:#22c55e"></div>
+              <div class="timeline-content">
+                <div class="timeline-title">Model Retrained</div>
+                <div class="timeline-time">10:00:00 · 94.3% accuracy</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Threat Correlation Table -->
+      <div class="card" style="margin-top:1.5rem">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">🔗</span> Correlated Event Details (click a threat above for full XAI breakdown)</div>
+        </div>
+        <div class="card-body">
+          <p style="color:var(--text-secondary);font-size:0.82rem;margin-bottom:1rem">
+            Each threat event above pairs a <strong style="color:var(--teal)">cybersecurity telemetry event</strong>
+            (login failures, lateral movement, data exfiltration) with a
+            <strong style="color:var(--blue)">financial transaction</strong>
+            (wire transfer, crypto purchase, forex). The AI engine scores this correlation using
+            <strong>Isolation Forest anomaly detection</strong> + a <strong>behavioral rule overlay</strong>,
+            then provides a plain-language explanation of why the alert was triggered.
+          </p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+            <div style="background:rgba(0,212,170,0.05);border:1px solid rgba(0,212,170,0.15);border-radius:8px;padding:1rem">
+              <div style="font-size:0.78rem;color:var(--teal);font-weight:600;margin-bottom:6px">🤖 AI Engine</div>
+              <div style="font-size:0.72rem;color:var(--text-secondary)">Isolation Forest trained on 5,000+ synthetic behavioral profiles. Contamination rate: 8%. Detects statistical outliers in 6-dimensional feature space.</div>
+            </div>
+            <div style="background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.15);border-radius:8px;padding:1rem">
+              <div style="font-size:0.78rem;color:var(--blue);font-weight:600;margin-bottom:6px">📋 Rule Engine</div>
+              <div style="font-size:0.72rem;color:var(--text-secondary)">4 behavioral rules: exfiltration+transfer, auth failures+high-value, geo-velocity anomaly, privilege escalation+transaction. Rule boost adds up to 25pts per rule.</div>
+            </div>
+            <div style="background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.15);border-radius:8px;padding:1rem">
+              <div style="font-size:0.78rem;color:var(--purple);font-weight:600;margin-bottom:6px">💡 XAI</div>
+              <div style="font-size:0.72rem;color:var(--text-secondary)">Every alert includes feature contributions (SHAP-style) showing which signals drove the score. Plain-language explanations make alerts actionable for security analysts.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /section-threats -->
+
+    <!-- ═══════════════════════════════════════════
+         SECTION: FRAUD GRAPH
+    ═══════════════════════════════════════════ -->
+    <div id="section-fraud" class="page-section" style="display:none">
+      <div class="section-grid" style="grid-template-columns: 2fr 1fr;">
+
+        <!-- D3 Network Graph -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">🕸️</span> Fraud Transaction Network</div>
+            <button class="btn btn-outline" id="refresh-fraud">↻ Regenerate</button>
+          </div>
+          <div id="fraud-graph"></div>
+          <div style="padding:10px 1.4rem;border-top:1px solid var(--border);display:flex;gap:1.5rem;font-size:0.72rem;color:var(--text-muted);">
+            <span><span style="color:#ef4444">●</span> Shell Corp / Money Mule</span>
+            <span><span style="color:#f59e0b">●</span> Offshore / Crypto</span>
+            <span><span style="color:#00d4aa">●</span> Legitimate Account</span>
+            <span><span style="color:rgba(239,68,68,0.6)">── </span>Suspicious Flow</span>
+          </div>
+        </div>
+
+        <!-- Pattern Detection -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">🔍</span> Layering Patterns</div>
+          </div>
+          <div class="card-body">
+            <p style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:1rem">
+              Detected money-laundering <strong>layering patterns</strong>: accounts that fan out rapid multi-hop transfers to conceal origin.
+            </p>
+            <div id="pattern-list"></div>
+          </div>
+
+          <div class="card-header" style="margin-top:1rem">
+            <div class="card-title"><span class="icon">📚</span> Pattern Types</div>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:0.75rem;">
+              <div style="padding:8px;background:rgba(239,68,68,0.05);border-left:3px solid #ef4444;border-radius:0 6px 6px 0">
+                <strong style="color:#ef4444">Layering</strong><br/>
+                <span style="color:var(--text-secondary)">Rapid multi-hop transfers to obscure fund origin</span>
+              </div>
+              <div style="padding:8px;background:rgba(245,158,11,0.05);border-left:3px solid #f59e0b;border-radius:0 6px 6px 0">
+                <strong style="color:#f59e0b">Smurfing</strong><br/>
+                <span style="color:var(--text-secondary)">Breaking large amounts into many small transactions</span>
+              </div>
+              <div style="padding:8px;background:rgba(139,92,246,0.05);border-left:3px solid #8b5cf6;border-radius:0 6px 6px 0">
+                <strong style="color:#8b5cf6">Shell Network</strong><br/>
+                <span style="color:var(--text-secondary)">Funds routed through shell company accounts</span>
+              </div>
+              <div style="padding:8px;background:rgba(59,130,246,0.05);border-left:3px solid #3b82f6;border-radius:0 6px 6px 0">
+                <strong style="color:#3b82f6">Crypto Laundering</strong><br/>
+                <span style="color:var(--text-secondary)">Fiat → Crypto → Fiat conversion chain detected</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /section-fraud -->
+
+    <!-- ═══════════════════════════════════════════
+         SECTION: QUANTUM RISK
+    ═══════════════════════════════════════════ -->
+    <div id="section-quantum" class="page-section" style="display:none">
+
+      <!-- Quantum Risk Meters -->
+      <div class="card" style="margin-bottom:1.5rem">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">⚛️</span> Quantum Risk Dashboard
+            <span style="margin-left:8px;font-size:0.75rem;color:var(--text-muted)">
+              Posture: <strong id="q-posture" style="color:var(--orange)">Calculating...</strong>
+            </span>
+          </div>
+          <button class="btn btn-outline" id="refresh-quantum">↻ Refresh</button>
+        </div>
+
+        <div class="quantum-risk-meter">
+          <div class="meter-label">HNDL Events</div>
+          <div class="meter-track"><div id="meter-hndl" class="meter-fill" style="width:0%"></div></div>
+          <div class="meter-value" style="color:var(--red)">—</div>
+        </div>
+        <div class="quantum-risk-meter">
+          <div class="meter-label">Vulnerable Ciphers</div>
+          <div class="meter-track"><div id="meter-vuln" class="meter-fill" style="width:0%"></div></div>
+          <div class="meter-value" style="color:var(--orange)">—</div>
+        </div>
+        <div class="quantum-risk-meter" style="border-bottom:none">
+          <div class="meter-label">Avg Quantum Risk</div>
+          <div class="meter-track"><div id="meter-qrisk" class="meter-fill" style="width:0%"></div></div>
+          <div class="meter-value" style="color:var(--purple)">—</div>
+        </div>
+      </div>
+
+      <div class="section-grid">
+        <!-- Quantum Events Grid -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">🔐</span> Live Cipher Suite Analysis</div>
+          </div>
+          <div id="quantum-grid" class="quantum-grid"></div>
+        </div>
+
+        <!-- HNDL Explainer -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">📖</span> HNDL Attack Explained</div>
+          </div>
+          <div class="card-body">
+            <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.8">
+              <h3 style="color:var(--purple);font-size:0.9rem;margin-bottom:8px">Harvest-Now, Decrypt-Later</h3>
+              <p style="margin-bottom:12px">
+                Adversaries today are <strong style="color:var(--text-primary)">harvesting encrypted banking data</strong>
+                knowing they can decrypt it once quantum computers are available (est. 2028–2032).
+              </p>
+
+              <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:8px;padding:12px;margin-bottom:12px">
+                <strong style="color:var(--purple)">Attack Flow:</strong><br/>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--teal)">
+                  Intercept TLS → Store ciphertext → Quantum decrypt in future
+                </span>
+              </div>
+
+              <p style="margin-bottom:8px"><strong style="color:var(--text-primary)">FinSpark detects:</strong></p>
+              <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;">
+                <li>⚠️ Bulk encrypted data exfiltration</li>
+                <li>⚠️ Unusual TLS key exchange volumes</li>
+                <li>⚠️ Protocol downgrade attempts (TLS 1.2 force)</li>
+                <li>⚠️ Quantum-vulnerable cipher usage (RSA, ECDH)</li>
+                <li>✅ Post-quantum safe ciphers (Kyber, FALCON)</li>
+              </ul>
+
+              <div style="margin-top:12px;padding:10px;background:rgba(0,212,170,0.05);border-left:3px solid var(--teal);border-radius:0 6px 6px 0;font-size:0.75rem">
+                <strong style="color:var(--teal)">NIST PQC Standards:</strong>
+                CRYSTALS-Kyber (KEM), CRYSTALS-Dilithium (Signatures),
+                FALCON, SPHINCS+ — all quantum-resistant.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /section-quantum -->
+
+    <!-- ═══════════════════════════════════════════
+         SECTION: EXPLAINABILITY
+    ═══════════════════════════════════════════ -->
+    <div id="section-xai" class="page-section" style="display:none">
+      <div class="section-grid">
+
+        <!-- XAI Architecture -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">🧠</span> AI Model Architecture</div>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+
+              <!-- Step 1 -->
+              <div style="display:flex;gap:12px;align-items:flex-start;">
+                <div style="width:36px;height:36px;background:linear-gradient(135deg,#00d4aa,#3b82f6);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#000;flex-shrink:0">1</div>
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem;margin-bottom:2px">Data Ingestion & Correlation</div>
+                  <div style="font-size:0.75rem;color:var(--text-secondary)">Cybersecurity telemetry (SIEM events, endpoint alerts, network logs) paired with transaction records by user_id and time window.</div>
+                </div>
+              </div>
+
+              <!-- Step 2 -->
+              <div style="display:flex;gap:12px;align-items:flex-start;">
+                <div style="width:36px;height:36px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;flex-shrink:0">2</div>
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem;margin-bottom:2px">Feature Engineering</div>
+                  <div style="font-size:0.75rem;color:var(--text-secondary)">6 key features extracted: transaction amount, failed logins, geo-mismatch, cross-border flag, bytes transferred, velocity score. Normalized via StandardScaler.</div>
+                </div>
+              </div>
+
+              <!-- Step 3 -->
+              <div style="display:flex;gap:12px;align-items:flex-start;">
+                <div style="width:36px;height:36px;background:linear-gradient(135deg,#8b5cf6,#ec4899);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;flex-shrink:0">3</div>
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem;margin-bottom:2px">Isolation Forest Anomaly Detection</div>
+                  <div style="font-size:0.75rem;color:var(--text-secondary)">200 trees, 8% contamination rate. Converts decision function output to 0–100 risk score. No labels needed — unsupervised, works on unknown threats.</div>
+                </div>
+              </div>
+
+              <!-- Step 4 -->
+              <div style="display:flex;gap:12px;align-items:flex-start;">
+                <div style="width:36px;height:36px;background:linear-gradient(135deg,#f59e0b,#ef4444);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;flex-shrink:0">4</div>
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem;margin-bottom:2px">Behavioral Rule Overlay</div>
+                  <div style="font-size:0.75rem;color:var(--text-secondary)">4 expert-defined rules add contextual boosts to scores. Rules catch patterns the statistical model might miss (e.g., privilege escalation before large transfer).</div>
+                </div>
+              </div>
+
+              <!-- Step 5 -->
+              <div style="display:flex;gap:12px;align-items:flex-start;">
+                <div style="width:36px;height:36px;background:linear-gradient(135deg,#22c55e,#00d4aa);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#000;flex-shrink:0">5</div>
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem;margin-bottom:2px">Explainable AI Output</div>
+                  <div style="font-size:0.75rem;color:var(--text-secondary)">Feature contributions (SHAP-style) + plain-language explanation + recommended action generated per alert. Analysts understand exactly WHY an alert was raised.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live XAI Demo -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">💡</span> Live Explanation Demo</div>
+            <button class="btn btn-primary" onclick="showMockDetail({level:'CRITICAL',title:'DATA_EXFILTRATION → WIRE_TRANSFER',user:'USR4821',country:'RU',amount:2840000,score:94,rule:'Critical telemetry event detected'})">
+              ▶ Run Demo Alert
+            </button>
+          </div>
+          <div class="card-body">
+            <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:1.2rem">
+              Click "Run Demo Alert" to see how FinSpark explains a <strong style="color:#ef4444">CRITICAL</strong>
+              threat: Data Exfiltration correlated with a $2.84M wire transfer. The XAI panel shows
+              each feature's contribution to the final risk score.
+            </p>
+
+            <div style="background:rgba(0,212,170,0.04);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem">
+              <div style="font-size:0.78rem;color:var(--teal);font-weight:600;margin-bottom:8px">Why Explainability Matters in Banking:</div>
+              <ul style="font-size:0.74rem;color:var(--text-secondary);line-height:1.8;list-style:disc;padding-left:1rem">
+                <li>Regulators (RBI, SEBI, Basel) require audit trails for AI decisions</li>
+                <li>Security analysts need to understand AI alerts to act on them</li>
+                <li>Black-box models erode trust — explainability builds it</li>
+                <li>Reduces false-positive fatigue by showing WHY an alert is real</li>
+              </ul>
+            </div>
+
+            <div style="background:rgba(59,130,246,0.04);border:1px solid rgba(59,130,246,0.15);border-radius:8px;padding:1rem">
+              <div style="font-size:0.78rem;color:var(--blue);font-weight:600;margin-bottom:8px">False Positive Reduction Strategy:</div>
+              <ul style="font-size:0.74rem;color:var(--text-secondary);line-height:1.8;list-style:disc;padding-left:1rem">
+                <li>Isolation Forest: unsupervised, no label bias</li>
+                <li>Rule overlay: context-aware boosting (not blanket alerts)</li>
+                <li>Multi-signal correlation: single signals ignored, combinations flagged</li>
+                <li>Threshold tuning: contamination=8% calibrated to reduce noise</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /section-xai -->
+
+  </div><!-- /main-content -->
+
+  <!-- ── Footer ──────────────────────────────────── -->
+  <footer class="footer">
+    <strong style="color:var(--teal)">FinSpark</strong> —
+    AI-Driven Correlation of Cybersecurity Telemetry &amp; Transactional Behaviour ·
+    Built with FastAPI + Isolation Forest + D3.js · 2026
+  </footer>
+
+</div><!-- /app-wrapper -->
+
+<!-- ── Alert Detail Modal ──────────────────────── -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="alert-modal">
+    <div class="modal-header">
+      <div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:2px">Alert ID</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.9rem;font-weight:600" id="modal-alert-id">—</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span id="modal-threat-level" class="severity-badge">—</span>
+        <button class="close-btn" id="modal-close">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem">
+        <div>
+          <div style="font-size:0.72rem;color:var(--text-muted)">Risk Score</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:800;line-height:1" id="modal-risk-score">—</div>
+          <div style="font-size:0.65rem;color:var(--text-muted)">out of 100</div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:6px">AI Explanation</div>
+          <div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.6" id="modal-explanation">—</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:0.8rem">
+        <div style="font-size:0.8rem;font-weight:600;color:var(--text-primary);margin-bottom:0.8rem">
+          Feature Contributions (SHAP-style)
+        </div>
+        <div id="xai-features"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/network_graph.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
